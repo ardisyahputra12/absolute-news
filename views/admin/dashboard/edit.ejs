@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Dashboard | AbsoluteNews</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="../images/berita-icon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../styles/bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+
+<body>
+    <header-app></header-app>
+    <nav class="navbar navbar-expand-lg bg-light sticky-top d-flex justify-content-center py-2 border-bottom">
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="/" class="nav-link" aria-current="page">Home</a></li>
+            <li class="nav-item"><a href="/category/business" class="nav-link">Business</a></li>
+            <li class="nav-item"><a href="/category/entertainment" class="nav-link">Entertainment</a></li>
+            <li class="nav-item"><a href="/category/health" class="nav-link">Health</a></li>
+            <li class="nav-item"><a href="/category/science" class="nav-link">Science</a></li>
+            <li class="nav-item"><a href="/category/sports" class="nav-link">Sports</a></li>
+            <li class="nav-item"><a href="/category/technology" class="nav-link">Technology</a></li>
+            <li class="nav-item"><a href="/category/data-covid19" class="nav-link">Data-Covid19</a></li>
+            <% if (user && user.admin) { %>
+                <li class="nav-item"><a href="/admin/dashboard" class="nav-link border border-primary">Dashboard</a></li>
+                <% } else if (user && !user.admin) { %>
+                    <li class="nav-item"><a href="/member/profile" class="nav-link border border-primary">Profile</a></li>
+                    <% } %>
+        </ul>
+    </nav>
+    <section>
+        <%- !user?'<a href="/auth/login" class="auth text-decoration-none position-absolute"><i class="bi bi-key-fill p-1"></i>Login</a>':'<a href="/auth/logout" class="auth text-decoration-none  position-absolute"><i class="bi bi-key-fill p-1"></i>Logout</a>' %>
+            <% if (user) { %>
+                <p class="username position-absolute">
+                    Halo, <strong><%= user.user_name %></strong>
+                </p>
+                <% } %>
+    </section>
+    <main>
+        <div class="d-flex flex-column">
+            <a href="/admin/dashboard" title="Kembali ke Dashboard" class="position-absolute"><i class="bi bi-arrow-left-circle-fill m-4"></i></a>
+            <div class="container-auth text-center w-50 m-auto mt-5 mb-4 p-3">
+                <h2 class="text-decoration-underline p-2">Ubah Data Pengguna</h2>
+                <div class="p-4">
+                    <div class="mb-4 text-start">
+                        <label for="user_name" class="m-4 mb-2 mt-0 p-3 pt-0 pb-0">Nama</label>
+                        <div class="input-group">
+                            <i class="bi bi-person-fill p-2"></i>
+                            <input type="text" class="form-control" placeholder="Nama" id="user_name" name="user_name" value="<%=users.user_name %>">
+                        </div>
+                    </div>
+                    <div class="mb-4 text-start">
+                        <label for="user_email" class="m-4 mb-2 mt-0 p-3 pt-0 pb-0">Email</label>
+                        <div class="input-group">
+                            <i class="bi bi-envelope-fill p-2"></i>
+                            <input type="email" class="form-control" placeholder="Email" id="user_email" name="user_email" value="<%=users.user_email %>">
+                        </div>
+                    </div>
+                    <div class="mb-4 text-start">
+                        <label for="user_password" class="m-4 mb-2 mt-0 p-3 pt-0 pb-0">Password</label>
+                        <div class="input-group">
+                            <i class="bi bi-lock-fill p-2"></i>
+                            <input type="password" class="form-control" placeholder="Password" id="user_password" name="user_password" value="<%=users.user_password %>">
+                        </div>
+                    </div>
+                    <div class="mb-4 text-start">
+                        <label for="admin" class="m-4 mb-2 mt-0 p-3 pt-0 pb-0">Admin / Member (1 / 0)</label>
+                        <div class="input-group">
+                            <i class="bi bi-shield-lock-fill p-2"></i>
+                            <input type="text" class="form-control" placeholder="Admin / Member (1 / 0)" id="admin" name="admin" value="<%- users.admin?'1':'0' %>">
+                        </div>
+                    </div>
+                    <button type="submit" onclick=<%='edit(' +users.id+ ')' %> class="button btn btn-primary m-3">Ubah</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer-app></footer-app>
+
+    <script src="../scripts/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../scripts/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        let edit = (id) => {
+            axios({
+                method: 'put',
+                url: '/admin/user/' + id,
+                data: {
+                    user_name: document.getElementById("user_name").value,
+                    user_email: document.getElementById("user_email").value,
+                    user_password: document.getElementById("user_password").value,
+                    admin: document.getElementById("admin").value
+                }
+            }).then((result) => {
+                alert(`${result.status}\nData pengguna berhasil diperbarui!`);
+                window.location = "/admin/dashboard";
+            }).catch((err) => {
+                alert(`error: ${err}\nData pengguna gagal diperbarui!`);
+                window.location = "/admin/edit";
+            });
+        };
+    </script>
+</body>
+
+</html>
