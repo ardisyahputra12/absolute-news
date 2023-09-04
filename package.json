@@ -7,8 +7,8 @@
         "server": "nodemon server"
     },
     "type": "module",
-    "author": "ardi_saputra | indra_gunawan | fitra_pramudia",
-    "license": "ISC",
+    "author": "ardi_saputra <ardisaputraa12@gmail.com>",
+    "license": "MIT",
     "dependencies": {
         "axios": "^0.25.0",
         "ejs": "^3.1.6",
